@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>寿命核算 · 齿轮组选配</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="/">单台选配</a>
+      <a href="/batch">批量装配</a>
+      <a href="/procure">缺齿补货</a>
+      <a href="/dual-speed">双档换速</a>
+      <a href="/lifetime" class="active">寿命核算</a>
+      <a href="/torque">带载安全</a>
+      <a href="/layout">轴位装配</a>
+      <a href="/diagnose">转速异常定位</a>
+      <a href="/phase-reset">装配校准</a>
+      <a href="/resonance">共振避让</a>
+      <a href="/backlash">空程预算</a>
+      <a href="/reciprocate">往复回放</a>
+    </nav>
+    <h1>⏳ 双档寿命核算</h1>
+    <p class="subtitle">固定一级累计两档负荷 · 跨档重复使用的换装齿轮同样累计 · 按齿数比以精确分数逐轮消耗 · 求全部齿轮均不超限的最多完整轮数</p>
+  </header>
+
+  <main>
+    <form id="lifetime-form" class="card">
+      <section>
+        <div class="section-head">
+          <h2>1. 双档装配（固定第一级 + 两档换装第二级）</h2>
+          <div class="btn-row">
+            <button type="button" id="btn-example" class="btn ghost">填入示例</button>
+          </div>
+        </div>
+        <p class="muted">
+          可从<strong>双档换速</strong>结果页把选中的方案一键带入本节，也可手动填写。
+          每档内 4 枚齿轮（固定级 2 枚 + 换装级 2 枚）不得重复；同一编号在任何位置必须对应同一齿数。
+        </p>
+        <p id="carry-note" class="alert ok" hidden>
+          已从双档换速结果带入选中的固定一级与两档换装一级，请继续填写每档每轮计划输入圈数与各齿轮剩余允许转数。
+        </p>
+
+        <h3 class="block-title">固定第一级（两档共用，换档不拆装）</h3>
+        <div class="grid four">
+          <label class="field">
+            <span>主动轮编号</span>
+            <input id="fd-id" placeholder="如 G1" maxlength="30" />
+          </label>
+          <label class="field">
+            <span>主动轮齿数</span>
+            <input id="fd-teeth" type="number" min="1" max="100000" step="1" placeholder="齿数" />
+          </label>
+          <label class="field">
+            <span>从动轮编号</span>
+            <input id="fw-id" placeholder="如 G2" maxlength="30" />
+          </label>
+          <label class="field">
+            <span>从动轮齿数</span>
+            <input id="fw-teeth" type="number" min="1" max="100000" step="1" placeholder="齿数" />
+          </label>
+        </div>
+
+        <h3 class="block-title">档位一 · 换装第二级</h3>
+        <div class="grid three">
+          <label class="field">
+            <span>档位名称（可空）</span>
+            <input id="s1-name" placeholder="默认 档位 1" maxlength="30" />
+          </label>
+          <label class="field">
+            <span>每轮计划输入圈数（正整数）</span>
+            <input id="s1-turns" type="number" min="1" max="1000000000000" step="1" placeholder="如 120" />
+          </label>
+          <label class="field">
+            <span>换装级主动轮编号</span>
+            <input id="s1-a-id" placeholder="如 G3" maxlength="30" />
+          </label>
+          <label class="field">
+            <span>换装级主动轮齿数</span>
+            <input id="s1-a-teeth" type="number" min="1" max="100000" step="1" placeholder="齿数" />
+          </label>
+          <label class="field">
+            <span>换装级从动轮编号</span>
+            <input id="s1-b-id" placeholder="如 G4" maxlength="30" />
+          </label>
+          <label class="field">
+            <span>换装级从动轮齿数</span>
+            <input id="s1-b-teeth" type="number" min="1" max="100000" step="1" placeholder="齿数" />
+          </label>
+        </div>
+
+        <h3 class="block-title">档位二 · 换装第二级</h3>
+        <div class="grid three">
+          <label class="field">
+            <span>档位名称（可空）</span>
+            <input id="s2-name" placeholder="默认 档位 2" maxlength="30" />
+          </label>
+          <label class="field">
+            <span>每轮计划输入圈数（正整数）</span>
+            <input id="s2-turns" type="number" min="1" max="1000000000000" step="1" placeholder="如 90" />
+          </label>
+          <label class="field">
+            <span>换装级主动轮编号</span>
+            <input id="s2-a-id" placeholder="如 G3" maxlength="30" />
+          </label>
+          <label class="field">
+            <span>换装级主动轮齿数</span>
+            <input id="s2-a-teeth" type="number" min="1" max="100000" step="1" placeholder="齿数" />
+          </label>
+          <label class="field">
+            <span>换装级从动轮编号</span>
+            <input id="s2-b-id" placeholder="如 G5" maxlength="30" />
+          </label>
+          <label class="field">
+            <span>换装级从动轮齿数</span>
+            <input id="s2-b-teeth" type="number" min="1" max="100000" step="1" placeholder="齿数" />
+          </label>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. 每枚参与齿轮的剩余允许转数（非负整数，单位：转）</h2>
+        <div class="life-grid-head">
+          <span>参与齿轮</span><span>参与角色（跨档重复使用的累计两档负荷）</span><span>剩余允许转数</span>
+        </div>
+        <div id="remaining-rows"></div>
+        <p class="muted">
+          清单随第 1 节装配自动刷新：固定级两枚齿轮两档都在工作、累计两档负荷；
+          跨档重复使用的换装齿轮同样累计；未装入某档的齿轮该档不计。
+        </p>
+      </section>
+
+      <div class="actions">
+        <button type="submit" class="btn primary">开始寿命核算</button>
+      </div>
+
+      <p id="form-error" class="alert error" hidden></p>
+    </form>
+
+    <section id="result-panel" class="card" hidden>
+      <div class="section-head">
+        <h2>3. 寿命核算结果</h2>
+        <span id="result-summary" class="summary"></span>
+      </div>
+      <p id="result-banner" class="alert" hidden></p>
+      <div id="result-detail"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>逐轮消耗 = 每轮计划输入圈数 × 所在轴转速比（精确分数 BigInt）· 最多完整轮数 = 各齿轮 ⌊剩余允许转数 ÷ 每轮消耗⌋ 的最小值 · 恰好达到限额视为可执行</span>
+  </footer>
+
+  <script src="lifetime.js"></script>
+</body>
+</html>

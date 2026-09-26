@@ -1,0 +1,11 @@
+services:
+  gear-selector:
+    build: .
+    image: gear-train-selector:latest
+    container_name: gear-train-selector
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+    restart: unless-stopped

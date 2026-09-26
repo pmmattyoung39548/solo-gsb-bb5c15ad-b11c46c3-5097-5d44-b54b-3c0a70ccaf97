@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>批量装配 · 齿轮组选配</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="/">单台选配</a>
+      <a href="/batch" class="active">批量装配</a>
+      <a href="/procure">缺齿补货</a>
+      <a href="/dual-speed">双档换速</a>
+      <a href="/lifetime">寿命核算</a>
+      <a href="/torque">带载安全</a>
+      <a href="/layout">轴位装配</a>
+      <a href="/diagnose">转速异常定位</a>
+      <a href="/phase-reset">装配校准</a>
+      <a href="/resonance">共振避让</a>
+      <a href="/backlash">空程预算</a>
+      <a href="/reciprocate">往复回放</a>
+    </nav>
+    <h1>⚙️ 批量装配</h1>
+    <p class="subtitle">一次为 2～3 台装置分配齿轮 · 共用齿轮清单 · 每枚实物齿轮整批至多使用一次</p>
+  </header>
+
+  <main>
+    <form id="batch-form" class="card">
+      <section>
+        <div class="section-head">
+          <h2>1. 共用齿轮清单（2～12 枚）</h2>
+          <div class="btn-row">
+            <button type="button" id="btn-example" class="btn ghost">填入示例</button>
+            <button type="button" id="btn-add-gear" class="btn ghost">＋ 添加齿轮</button>
+          </div>
+        </div>
+        <div class="gear-grid-head">
+          <span>唯一编号</span><span>齿数</span><span></span>
+        </div>
+        <div id="gear-rows"></div>
+        <p class="muted">所有装置共用此清单；分配时同一编号齿轮不会同时出现在多台装置中。</p>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h2>2. 装置目标参数（2～3 台）</h2>
+          <div class="btn-row">
+            <button type="button" id="btn-add-device" class="btn ghost">＋ 添加装置</button>
+          </div>
+        </div>
+        <div class="device-grid-head">
+          <span>装置名称（可空）</span><span>目标输出转速比</span><span>允许相对误差</span><span></span>
+        </div>
+        <div id="device-rows"></div>
+      </section>
+
+      <div class="actions">
+        <button type="submit" class="btn primary">开始批量装配</button>
+      </div>
+
+      <p id="form-error" class="alert error" hidden></p>
+    </form>
+
+    <section id="result-panel" class="card" hidden>
+      <div class="section-head">
+        <h2>3. 批量分配结果</h2>
+        <span id="result-summary" class="summary"></span>
+      </div>
+      <div id="device-results"></div>
+      <div id="unused-panel" class="unused-panel">
+        <h3>未使用齿轮（<span id="unused-count">0</span> 枚）</h3>
+        <div id="unused-list" class="chip-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>择优顺序：达标台数最多 → 总级数最少 → 相对误差之和最小 → 装置顺序与齿轮编号自然序 · 全程精确分数（BigInt）计算</span>
+  </footer>
+
+  <script src="batch.js"></script>
+</body>
+</html>

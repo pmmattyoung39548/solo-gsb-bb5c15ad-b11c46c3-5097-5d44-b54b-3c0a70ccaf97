@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>带载安全选配 · 齿轮组选配</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="/">单台选配</a>
+      <a href="/batch">批量装配</a>
+      <a href="/procure">缺齿补货</a>
+      <a href="/dual-speed">双档换速</a>
+      <a href="/lifetime">寿命核算</a>
+      <a href="/torque" class="active">带载安全</a>
+      <a href="/layout">轴位装配</a>
+      <a href="/diagnose">转速异常定位</a>
+      <a href="/phase-reset">装配校准</a>
+      <a href="/resonance">共振避让</a>
+      <a href="/backlash">空程预算</a>
+      <a href="/reciprocate">往复回放</a>
+    </nav>
+    <h1>🔩 带载安全选配</h1>
+    <p class="subtitle">沿用单台选配的齿轮 / 目标速比 / 容差规则 · 另按无损传动逐级校核两轮承受扭矩与额定值 · 同一配对的全部级次顺序分别校核</p>
+  </header>
+
+  <main>
+    <form id="torque-form" class="card">
+      <section>
+        <h2>1. 目标参数</h2>
+        <div class="grid three">
+          <label class="field">
+            <span>目标输出转速比（输出 / 输入）</span>
+            <input id="target" name="target" value="1/12" placeholder="如 0.0833 或 1/12" required />
+            <small>支持小数或分数，例如 1/12、0.0833、4</small>
+          </label>
+          <label class="field">
+            <span>允许相对误差</span>
+            <input id="tolerance" name="tolerance" value="5%" placeholder="如 5% 或 0.05" required />
+            <small>可填百分数（5%）或小数（0.05）</small>
+          </label>
+          <label class="field">
+            <span>输入扭矩（N·m，正整数）</span>
+            <input id="input-torque" name="inputTorque" type="number" min="1" max="1000000000000" step="1" value="100" required />
+            <small>第一级主动轮承受的扭矩；后续级按齿数比逐级传递</small>
+          </label>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h2>2. 现有齿轮（2～12 枚，含每枚额定扭矩）</h2>
+          <div class="btn-row">
+            <button type="button" id="btn-example" class="btn ghost">填入示例</button>
+            <button type="button" id="btn-add" class="btn ghost">＋ 添加齿轮</button>
+          </div>
+        </div>
+        <div class="rated-grid-head">
+          <span>唯一编号</span><span>齿数</span><span>额定扭矩（N·m，正整数）</span><span></span>
+        </div>
+        <div id="gear-rows"></div>
+        <p class="muted">
+          按无损传动计算：每级主动轮承受该级输入扭矩，从动轮承受“输入扭矩 × 从动齿数 / 主动齿数”，
+          后者作为下一级输入；两轮承受值均不得超过各自额定值。
+        </p>
+      </section>
+
+      <div class="actions">
+        <button type="submit" class="btn primary">开始带载选配</button>
+      </div>
+
+      <p id="form-error" class="alert error" hidden></p>
+    </form>
+
+    <section id="result-panel" class="card" hidden>
+      <div class="section-head">
+        <h2>3. 带载选配结果</h2>
+        <span id="result-summary" class="summary"></span>
+      </div>
+      <p id="no-solution" class="alert" hidden></p>
+      <p id="truncated-note" class="muted" hidden></p>
+      <div id="result-list"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>同一组配对的全部级次顺序分别校核扭矩 · 排序：级数最少 → 速比误差最小 → 级次编号自然序 · 全程精确分数（BigInt）计算</span>
+  </footer>
+
+  <script src="torque.js"></script>
+</body>
+</html>

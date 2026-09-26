@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>共振避让转速 · 齿轮组选配</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="/">单台选配</a>
+      <a href="/batch">批量装配</a>
+      <a href="/procure">缺齿补货</a>
+      <a href="/dual-speed">双档换速</a>
+      <a href="/lifetime">寿命核算</a>
+      <a href="/torque">带载安全</a>
+      <a href="/layout">轴位装配</a>
+      <a href="/diagnose">转速异常定位</a>
+      <a href="/phase-reset">装配校准</a>
+      <a href="/resonance" class="active">共振避让</a>
+      <a href="/backlash">空程预算</a>
+      <a href="/reciprocate">往复回放</a>
+    </nav>
+    <h1>🚫 共振避让转速</h1>
+    <p class="subtitle">已装 1～3 级传动 · 按齿数连乘求各轴转速倍率（精确分数）· 把轴上禁用转速带反推为整数输入转速区间 · 求全部安全区间并推荐最长连续区间</p>
+  </header>
+
+  <main>
+    <form id="resonance-form" class="card">
+      <section>
+        <div class="section-head">
+          <h2>1. 已装齿轮级（1～3 级，按输入轴 → 输出轴顺序）</h2>
+          <div class="btn-row">
+            <button type="button" id="btn-example" class="btn ghost">填入示例</button>
+            <button type="button" id="btn-stage-add" class="btn ghost">＋ 添加一级</button>
+          </div>
+        </div>
+        <div class="stage-grid-head">
+          <span>级（轴间）</span><span>主动齿数</span><span>从动齿数</span><span></span>
+        </div>
+        <div id="stage-rows"></div>
+      </section>
+
+      <section>
+        <h2>2. 输入转速允许闭区间（正整数，单位 rpm）</h2>
+        <div class="grid two">
+          <label class="field">
+            <span>输入转速下限（rpm）</span>
+            <input id="input-min" type="number" min="1" max="1000000000000" step="1" value="1000" />
+          </label>
+          <label class="field">
+            <span>输入转速上限（rpm）</span>
+            <input id="input-max" type="number" min="1" max="1000000000000" step="1" value="3000" />
+          </label>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h2>3. 各轴禁用转速闭区间（最多 10 条，正整数端点，单位 rpm）</h2>
+          <div class="btn-row">
+            <button type="button" id="btn-rule-add" class="btn ghost">＋ 添加一条</button>
+          </div>
+        </div>
+        <p class="muted">
+          轴号从<strong>输入轴（轴 1）</strong>到输出轴依次编号；空行视为未填写将被忽略。
+          系统按该轴转速倍率把禁用带反推为会触发的整数输入转速区间，再统一裁剪、合并。
+        </p>
+        <div class="forbid-grid-head">
+          <span>轴号</span><span>禁用下限（rpm）</span><span>禁用上限（rpm）</span><span></span>
+        </div>
+        <div id="rule-rows"></div>
+      </section>
+
+      <div class="actions">
+        <button type="submit" class="btn primary">计算安全转速区间</button>
+      </div>
+
+      <p id="form-error" class="alert error" hidden></p>
+    </form>
+
+    <section id="result-panel" class="card" hidden>
+      <div class="section-head">
+        <h2>4. 安全转速区间与推荐</h2>
+        <span id="result-summary" class="summary"></span>
+      </div>
+      <p id="verdict-alert" class="alert" hidden></p>
+      <div id="result-detail"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>各轴转速倍率 = 齿数连乘（精确分数 BigInt）· 禁用带反推 ⌈q·lo/p⌉ ≤ n ≤ ⌊q·hi/p⌋ · 裁剪到允许范围后按整数闭区间合并 · 推荐整数转速最多的连续安全区间（并列取起点较小者）</span>
+  </footer>
+
+  <script src="resonance.js"></script>
+</body>
+</html>

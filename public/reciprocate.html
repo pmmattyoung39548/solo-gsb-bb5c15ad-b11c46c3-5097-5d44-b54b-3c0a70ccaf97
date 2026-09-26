@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>往复运动回放 · 齿轮组选配</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="/">单台选配</a>
+      <a href="/batch">批量装配</a>
+      <a href="/procure">缺齿补货</a>
+      <a href="/dual-speed">双档换速</a>
+      <a href="/lifetime">寿命核算</a>
+      <a href="/torque">带载安全</a>
+      <a href="/layout">轴位装配</a>
+      <a href="/diagnose">转速异常定位</a>
+      <a href="/phase-reset">装配校准</a>
+      <a href="/resonance">共振避让</a>
+      <a href="/backlash">空程预算</a>
+      <a href="/reciprocate" class="active">往复回放</a>
+    </nav>
+    <h1>🔁 往复运动回放</h1>
+    <p class="subtitle">已装 1～3 级外啮合传动 · 各级从动轴侧固定齿隙宽度 w 与初始间隙位置 g（0 ≤ g ≤ w）· 1～50 段有符号输入转数逐段传递 · 精确分数回放各轴位移与各级剩余间隙</p>
+  </header>
+
+  <main>
+    <form id="reciprocate-form" class="card">
+      <section>
+        <div class="section-head">
+          <h2>1. 已装齿轮级与齿隙状态（1～3 级，按输入轴 → 输出轴顺序）</h2>
+          <div class="btn-row">
+            <button type="button" id="btn-example" class="btn ghost">填入示例</button>
+            <button type="button" id="btn-stage-add" class="btn ghost">＋ 添加一级</button>
+          </div>
+        </div>
+        <p class="muted">
+          每级填写<strong>主动 / 从动正整数齿数</strong>、该级<strong>从动轴侧固定齿隙宽度 w</strong>（单位：该级从动轴转数）
+          与<strong>初始间隙位置 g</strong>（需满足 0 ≤ g ≤ w）；齿隙支持分数（如 1/8）或小数（如 0.125），
+          无齿隙时 w 与 g 都填 0。
+        </p>
+        <div class="recip-grid-head">
+          <span>级（轴间）</span><span>主动齿数</span><span>从动齿数</span><span>齿隙宽度 w（转）</span><span>初始间隙 g（转）</span><span></span>
+        </div>
+        <div id="stage-rows"></div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h2>2. 逐段输入转数（1～50 段，有符号）</h2>
+          <div class="btn-row">
+            <button type="button" id="btn-segment-add" class="btn ghost">＋ 添加一段</button>
+          </div>
+        </div>
+        <p class="muted">
+          每段填写输入轴在该段的<strong>有符号转数</strong>：正转填正数、反转填负数，
+          支持分数（如 −3/2）或小数（如 −1.5），零位移填 0。
+          各轴累计位移初始为 0；各级间隙位置与各轴累计位移<strong>跨段保留</strong>。
+        </p>
+        <div class="seg-grid-head">
+          <span>段</span><span>输入转数（转）</span><span></span>
+        </div>
+        <div id="segment-rows"></div>
+      </section>
+
+      <div class="actions">
+        <button type="submit" class="btn primary">开始往复回放</button>
+      </div>
+
+      <p id="form-error" class="alert error" hidden></p>
+    </form>
+
+    <section id="result-panel" class="card" hidden>
+      <div class="section-head">
+        <h2>3. 回放结果</h2>
+        <span id="result-summary" class="summary"></span>
+      </div>
+      <p id="verdict-alert" class="alert" hidden></p>
+      <div id="result-detail"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>每段按级传递：d = 上游实际位移 ×（−主动齿 / 从动齿）· u = g + d · g′ = min(w, max(0, u)) · 本级实际位移 = u − g′ · 精确分数（BigInt），状态跨段保留</span>
+  </footer>
+
+  <script src="reciprocate.js"></script>
+</body>
+</html>

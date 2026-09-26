@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>双档换速 · 齿轮组选配</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="/">单台选配</a>
+      <a href="/batch">批量装配</a>
+      <a href="/procure">缺齿补货</a>
+      <a href="/dual-speed" class="active">双档换速</a>
+      <a href="/lifetime">寿命核算</a>
+      <a href="/torque">带载安全</a>
+      <a href="/layout">轴位装配</a>
+      <a href="/diagnose">转速异常定位</a>
+      <a href="/phase-reset">装配校准</a>
+      <a href="/resonance">共振避让</a>
+      <a href="/backlash">空程预算</a>
+      <a href="/reciprocate">往复回放</a>
+    </nav>
+    <h1>🔀 双档换速</h1>
+    <p class="subtitle">两档共用同一有向齿轮对作为固定第一级 · 每档恰好两级 · 第二级按档换装 · 需更换轴位最少 → 两档误差之和最小 → 编号自然序</p>
+  </header>
+
+  <main>
+    <form id="dual-form" class="card">
+      <section>
+        <div class="section-head">
+          <h2>1. 齿轮清单（4～12 枚）</h2>
+          <div class="btn-row">
+            <button type="button" id="btn-example" class="btn ghost">填入示例</button>
+            <button type="button" id="btn-add-gear" class="btn ghost">＋ 添加齿轮</button>
+          </div>
+        </div>
+        <div class="gear-grid-head">
+          <span>唯一编号</span><span>齿数</span><span></span>
+        </div>
+        <div id="gear-rows"></div>
+        <p class="muted">
+          固定第一级与第二级共同安装在同一台装置上：每档 4 枚齿轮不得复用；
+          两档互斥运行，因此两档的第二级换装齿轮允许是同一实物。
+        </p>
+      </section>
+
+      <section>
+        <h2>2. 两个档位的目标参数</h2>
+        <div class="device-grid-head">
+          <span>档位名称（可空）</span><span>目标输出转速比</span><span>允许相对误差</span><span></span>
+        </div>
+        <div id="speed-rows"></div>
+        <p class="muted">两个档位共用同一个固定第一级（有向齿轮对），仅第二级按档换装。</p>
+      </section>
+
+      <div class="actions">
+        <button type="submit" class="btn primary">开始双档选配</button>
+      </div>
+
+      <p id="form-error" class="alert error" hidden></p>
+    </form>
+
+    <section id="result-panel" class="card" hidden>
+      <div class="section-head">
+        <h2>3. 双档选配结果</h2>
+        <span id="result-summary" class="summary"></span>
+      </div>
+      <p id="result-banner" class="alert" hidden></p>
+      <div id="no-solution-detail"></div>
+
+      <div id="result-body" hidden>
+        <div id="fixed-panel"></div>
+
+        <h3 class="block-title">两档换装方案</h3>
+        <div id="speed-results"></div>
+
+        <div id="change-panel" class="unused-panel"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>择优顺序：第二级需更换轴位数最少 → 两档相对误差之和最小 → 齿轮编号自然序 · 每档恰好两级 · 全程精确分数（BigInt）判定</span>
+  </footer>
+
+  <script src="dual-speed.js"></script>
+</body>
+</html>

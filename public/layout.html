@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>轴位装配 · 齿轮组选配</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="top-nav">
+      <a href="/">单台选配</a>
+      <a href="/batch">批量装配</a>
+      <a href="/procure">缺齿补货</a>
+      <a href="/dual-speed">双档换速</a>
+      <a href="/lifetime">寿命核算</a>
+      <a href="/torque">带载安全</a>
+      <a href="/layout" class="active">轴位装配</a>
+      <a href="/diagnose">转速异常定位</a>
+      <a href="/phase-reset">装配校准</a>
+      <a href="/resonance">共振避让</a>
+      <a href="/backlash">空程预算</a>
+      <a href="/reciprocate">往复回放</a>
+    </nav>
+    <h1>📐 轴位装配</h1>
+    <p class="subtitle">2～4 个沿直线依次排列的轴心 · 相邻轴各装一级 · 每级须满足 2×轴距 = 模数×(主动齿数+从动齿数) · 每枚齿轮全程只用一次</p>
+  </header>
+
+  <main>
+    <form id="layout-form" class="card">
+      <section>
+        <div class="section-head">
+          <h2>1. 轴位与模数（按输入轴 → 输出轴顺序填写）</h2>
+          <div class="btn-row">
+            <button type="button" id="btn-example" class="btn ghost">填入示例</button>
+            <button type="button" id="btn-axis-add" class="btn ghost">＋ 添加轴心</button>
+          </div>
+        </div>
+        <div class="axis-grid-head">
+          <span>轴序</span><span>X 坐标（整数）</span><span>Y 坐标（整数，一维可留空）</span><span></span>
+        </div>
+        <div id="axis-rows"></div>
+        <div class="grid two" style="margin-top:12px;">
+          <label class="field">
+            <span>模数 m（正整数，各级统一）</span>
+            <input id="module" name="module" type="number" min="1" max="100000" step="1" value="2" required />
+            <small>啮合条件：2×轴距 = m ×（主动齿数 + 从动齿数）</small>
+          </label>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. 目标参数</h2>
+        <div class="grid two">
+          <label class="field">
+            <span>目标输出转速比（输出 / 输入）</span>
+            <input id="target" name="target" value="1/3" placeholder="如 0.0833 或 1/12" required />
+            <small>支持小数或分数，例如 1/3、0.0833、4</small>
+          </label>
+          <label class="field">
+            <span>允许相对误差</span>
+            <input id="tolerance" name="tolerance" value="5%" placeholder="如 5% 或 0.05" required />
+            <small>可填百分数（5%）或小数（0.05）；0% 表示要求精确匹配</small>
+          </label>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h2>3. 现有齿轮（2～12 枚；n 个轴至少需 2(n−1) 枚）</h2>
+          <div class="btn-row">
+            <button type="button" id="btn-gear-add" class="btn ghost">＋ 添加齿轮</button>
+          </div>
+        </div>
+        <div class="gear-grid-head">
+          <span>唯一编号</span><span>齿数</span><span></span>
+        </div>
+        <div id="gear-rows"></div>
+        <p class="muted">
+          相邻轴间各装一级传动；中间轴上把前级从动轮与后级主动轮同轴固定（两枚不同实物）。
+          系统先按轴距穷举每级的有向配对，再以精确分数校核总速比。
+        </p>
+      </section>
+
+      <div class="actions">
+        <button type="submit" class="btn primary">开始轴位装配</button>
+      </div>
+
+      <p id="form-error" class="alert error" hidden></p>
+    </form>
+
+    <section id="result-panel" class="card" hidden>
+      <div class="section-head">
+        <h2>4. 装配结果</h2>
+        <span id="result-summary" class="summary"></span>
+      </div>
+      <p id="no-solution" class="alert" hidden></p>
+      <div id="geometry-panel"></div>
+      <div id="result-detail"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>每级满足 2×轴距 = 模数×齿数和 · 每枚齿轮全程只用一次 · 总速比与相对误差全程精确分数（BigInt）校核 · 排序：误差最小 → 齿轮编号自然序</span>
+  </footer>
+
+  <script src="layout.js"></script>
+</body>
+</html>

@@ -1,0 +1,571 @@
+:root {
+  --bg: #f4f5f7;
+  --card: #ffffff;
+  --ink: #1f2733;
+  --muted: #6b7685;
+  --line: #dfe3e8;
+  --brand: #2f6f4f;
+  --brand-dark: #24573e;
+  --accent: #e8f3ec;
+  --danger: #b3261e;
+  --danger-bg: #fdecea;
+  --warn: #8a5a00;
+  --warn-bg: #fff6e0;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.site-header {
+  padding: 28px 20px 12px;
+  text-align: center;
+}
+.site-header h1 { margin: 0 0 6px; font-size: 26px; }
+.subtitle { margin: 0; color: var(--muted); font-size: 14px; }
+
+.top-nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.top-nav a {
+  padding: 5px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+.top-nav a:hover { border-color: #b9c1cc; color: var(--ink); }
+.top-nav a.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  font-weight: 600;
+}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 12px 16px 40px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 1px 3px rgba(20, 30, 40, 0.05);
+}
+
+h2 { font-size: 16px; margin: 0 0 12px; }
+
+.grid.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.grid.three {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 640px) {
+  .grid.two, .grid.three { grid-template-columns: 1fr; }
+}
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field > span { font-size: 14px; font-weight: 600; }
+.field small { color: var(--muted); font-size: 12px; }
+
+input[type="text"], input[type="number"], input:not([type]) {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 15px;
+  font-family: inherit;
+}
+input:focus { outline: 2px solid var(--brand); outline-offset: 0; border-color: var(--brand); }
+
+section + section { margin-top: 22px; }
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.section-head h2 { margin: 0; }
+
+.btn-row { display: flex; gap: 8px; }
+
+.btn {
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-family: inherit;
+}
+.btn:hover { border-color: #b9c1cc; }
+.btn.ghost { background: #fafbfc; }
+.btn.primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 26px;
+  font-size: 15px;
+}
+.btn.primary:hover { background: var(--brand-dark); }
+.btn.danger-ghost { color: var(--danger); }
+
+.gear-grid-head,
+.gear-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 44px;
+  gap: 10px;
+  align-items: center;
+}
+.gear-grid-head {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.gear-row { margin-bottom: 8px; }
+
+.actions { margin-top: 22px; text-align: center; }
+
+.alert {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.alert.error { background: var(--danger-bg); color: var(--danger); border: 1px solid #f3c2bd; }
+.alert.warn { background: var(--warn-bg); color: var(--warn); border: 1px solid #f0ddaa; }
+.alert.ok { background: var(--accent); color: var(--brand-dark); border: 1px solid #a9d3bb; }
+
+.muted { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+
+.summary { font-size: 13px; color: var(--muted); }
+
+.solution {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 12px;
+}
+.solution.best { border-color: var(--brand); background: var(--accent); }
+
+.solution-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.solution-title { font-weight: 700; font-size: 15px; }
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  margin-right: 6px;
+}
+.solution-meta { font-size: 13px; color: var(--muted); }
+.solution-meta strong { color: var(--ink); }
+
+table.pairs { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 14px; }
+table.pairs th, table.pairs td {
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  text-align: center;
+}
+table.pairs th { background: #f0f2f5; font-weight: 600; }
+.gear-id { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.frac { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: nowrap; }
+
+.site-footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  padding: 10px 0 30px;
+}
+
+/* ---------------- 批量装配 ---------------- */
+
+.device-grid-head,
+.device-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 44px;
+  gap: 10px;
+  align-items: center;
+}
+.device-grid-head {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.device-row { margin-bottom: 8px; }
+@media (max-width: 640px) {
+  .device-grid-head,
+  .device-row { grid-template-columns: 1fr 1fr; }
+}
+
+.solution.miss { border-color: #e5c07b; background: var(--warn-bg); }
+
+.badge.badge-ok { background: var(--brand); }
+.badge.badge-miss {
+  background: var(--warn);
+}
+
+.unused-panel { margin-top: 18px; }
+.unused-panel h3 { font-size: 14px; margin: 0 0 8px; }
+.chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fafbfc;
+  font-size: 13px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.chip-buy {
+  border-color: var(--brand);
+  background: var(--accent);
+  color: var(--brand-dark);
+  font-weight: 600;
+}
+
+/* ---------------- 缺齿补货采购建议 ---------------- */
+
+.buyable-grid-head,
+.buyable-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr 44px;
+  gap: 10px;
+  align-items: center;
+}
+.buyable-grid-head {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.buyable-row { margin-bottom: 8px; }
+@media (max-width: 640px) {
+  .buyable-grid-head,
+  .buyable-row { grid-template-columns: 1fr 1fr; }
+}
+
+.block-title { font-size: 14px; margin: 16px 0 8px; }
+
+/* ---------------- 带载安全选配 ---------------- */
+
+.rated-grid-head,
+.rated-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr 44px;
+  gap: 10px;
+  align-items: center;
+}
+.rated-grid-head {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.rated-row { margin-bottom: 8px; }
+@media (max-width: 640px) {
+  .rated-grid-head,
+  .rated-row { grid-template-columns: 1fr 1fr; }
+}
+
+table.torque-table th, table.torque-table td { text-align: left; vertical-align: middle; }
+.torque-val { font-size: 13px; white-space: nowrap; }
+.torque-rated { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.badge.badge-limit {
+  background: var(--warn);
+  font-size: 11px;
+  padding: 0 6px;
+}
+
+/* ---------------- 轴位装配 ---------------- */
+
+.axis-grid-head,
+.axis-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1.6fr 44px;
+  gap: 10px;
+  align-items: center;
+}
+.axis-grid-head {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.axis-row { margin-bottom: 8px; }
+.axis-index { font-size: 13px; font-weight: 600; color: var(--brand-dark); white-space: nowrap; }
+@media (max-width: 640px) {
+  .axis-grid-head,
+  .axis-row { grid-template-columns: 1fr 1fr; }
+}
+
+.meshing-no { color: var(--danger); font-weight: 600; }
+
+.shafts-panel { margin-top: 16px; }
+table.shaft-table th, table.shaft-table td { text-align: left; vertical-align: middle; }
+.mount-cell { min-width: 240px; }
+.mount-item { padding: 2px 0; }
+.mount-item + .mount-item { border-top: 1px dashed var(--line); }
+
+.solution.best-warn { border-color: #e5c07b; background: var(--warn-bg); }
+.badge.badge-warn { background: var(--warn); }
+
+/* ---------------- 转速异常定位 ---------------- */
+
+.stage-grid-head,
+.stage-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 44px;
+  gap: 10px;
+  align-items: center;
+}
+.stage-grid-head {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.stage-row { margin-bottom: 8px; }
+.stage-index { font-size: 13px; font-weight: 600; color: var(--brand-dark); white-space: nowrap; }
+@media (max-width: 640px) {
+  .stage-grid-head,
+  .stage-row { grid-template-columns: 1fr 1fr; }
+}
+
+.obs-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-top: 12px;
+  background: #fafbfc;
+}
+.obs-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.obs-head .obs-name-input { flex: 1 1 200px; }
+.obs-axis-hint { font-size: 12px; }
+
+.reading-grid-head,
+.reading-row {
+  display: grid;
+  grid-template-columns: 0.8fr 1.4fr 1.4fr 44px;
+  gap: 10px;
+  align-items: center;
+}
+.reading-grid-head {
+  margin: 6px 0 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.reading-row { margin-bottom: 8px; }
+@media (max-width: 640px) {
+  .reading-grid-head,
+  .reading-row { grid-template-columns: 1fr 1fr; }
+}
+
+.obs-result {
+  border-top: 1px dashed var(--line);
+  margin-top: 16px;
+  padding-top: 4px;
+}
+
+.diag-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.diag-tag-suspect { background: var(--warn); color: #fff; }
+.diag-tag-amb { background: #f0ddaa; color: var(--warn); }
+.diag-tag-out { background: #eceff3; color: var(--muted); }
+.diag-ok { color: var(--brand-dark); font-weight: 600; }
+.diag-bad { color: var(--danger); font-weight: 600; }
+table.diag-cand-table td { vertical-align: middle; }
+
+/* ---------------- 共振避让转速 ---------------- */
+
+.forbid-grid-head,
+.forbid-row {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr 1.2fr 44px;
+  gap: 10px;
+  align-items: center;
+}
+.forbid-grid-head {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.forbid-row { margin-bottom: 8px; }
+@media (max-width: 640px) {
+  .forbid-grid-head,
+  .forbid-row { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------------- 装配校准 ---------------- */
+
+.phase-grid-head,
+.phase-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 10px;
+  align-items: center;
+}
+.phase-grid-head {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.phase-row { margin-bottom: 8px; }
+.phase-axis { font-size: 13px; font-weight: 600; color: var(--brand-dark); white-space: nowrap; }
+.phase-big { font-size: 22px; color: var(--brand-dark); }
+@media (max-width: 640px) {
+  .phase-grid-head,
+  .phase-row { grid-template-columns: 1fr; }
+}
+
+/* ---------------- 反向空程预算 ---------------- */
+
+.lash-grid-head,
+.lash-row {
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr 0.9fr 1.1fr 1.1fr 44px;
+  gap: 10px;
+  align-items: center;
+}
+.lash-grid-head {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.lash-row { margin-bottom: 8px; }
+@media (max-width: 640px) {
+  .lash-grid-head,
+  .lash-row { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------------- 往复运动回放 ---------------- */
+
+.recip-grid-head,
+.recip-row {
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr 0.9fr 1.1fr 1.1fr 44px;
+  gap: 10px;
+  align-items: center;
+}
+.recip-grid-head {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.recip-row { margin-bottom: 8px; }
+@media (max-width: 640px) {
+  .recip-grid-head,
+  .recip-row { grid-template-columns: 1fr 1fr; }
+}
+
+.seg-grid-head,
+.seg-row {
+  display: grid;
+  grid-template-columns: 1.4fr 2fr 44px;
+  gap: 10px;
+  align-items: center;
+}
+.seg-grid-head {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.seg-row { margin-bottom: 8px; }
+.seg-index { font-size: 13px; font-weight: 600; color: var(--brand-dark); white-space: nowrap; }
+@media (max-width: 640px) {
+  .seg-grid-head,
+  .seg-row { grid-template-columns: 1fr 1fr; }
+}
+
+.table-scroll { overflow-x: auto; }
+table.replay-table th, table.replay-table td { white-space: nowrap; }
+.cell-dec { color: var(--muted); font-size: 11px; }
+
+.seg-detail {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 8px;
+  background: #fafbfc;
+}
+.seg-detail summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brand-dark);
+}
+.seg-detail .table-scroll { margin-top: 8px; }
+
+/* ---------------- 寿命核算 ---------------- */
+.grid.four {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+@media (max-width: 640px) {
+  .grid.four { grid-template-columns: 1fr 1fr; }
+}
+
+.life-grid-head,
+.life-row {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr 1.2fr;
+  gap: 10px;
+  align-items: center;
+}
+.life-grid-head {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.life-row { margin-bottom: 8px; }
+.life-roles { font-size: 12px; color: var(--muted); }
+tr.life-limit td { background: var(--warn-bg); }
+.life-entry { margin-top: 18px; text-align: center; }
+@media (max-width: 640px) {
+  .life-grid-head,
+  .life-row { grid-template-columns: 1fr 1fr; }
+}

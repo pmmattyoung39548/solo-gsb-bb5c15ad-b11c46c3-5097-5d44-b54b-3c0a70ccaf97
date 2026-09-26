@@ -1,0 +1,15 @@
+{
+  "name": "gear-train-selector",
+  "version": "1.0.0",
+  "description": "手摇机械装置齿轮组选配 Web 应用：按目标输出转速比与允许误差，在 1~3 级传动中搜索达标齿轮配对方案",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
