@@ -20,7 +20,7 @@ const {
 } = require('./procure');
 const { planDualSpeed, MIN_GEARS: MIN_DUAL_GEARS } = require('./dual');
 const { validateTorqueGears, parsePositiveInt, MAX_TORQUE } = require('./torque');
-const { TorqueComputeQueue, MAX_WAITING: MAX_TORQUE_WAITING } = require('./torque-queue');
+const { TorqueComputeQueue, MAX_WAITING: MAX_TORQUE_WAITING, TaskCancelled } = require('./torque-queue');
 const {
   planLayout,
   parseAxes,
@@ -567,13 +567,23 @@ app.post('/api/torque', async (req, res) => {
     });
   }
 
+  // 连接在结果返回前关闭（用户重新提交 / 离开页面中止了请求）：排队任务立即
+  // 移出队列释放名额，计算中的任务终止 worker 并重建；响应已发出后的 close
+  // 不再触发取消（cancel 本身幂等）
+  res.on('close', () => {
+    if (!res.writableEnded) submitted.cancel();
+  });
+
   let plan;
   try {
     plan = await submitted.result;
   } catch (err) {
+    // 本请求放弃任务（连接已关闭）：静默结束，不向已关闭的响应写任何内容
+    if (err instanceof TaskCancelled || res.writableEnded || res.destroyed) return;
     // 计算线程异常（含线程崩溃重建）只让当前请求失败，队列中其余请求不受影响
     return res.status(500).json({ error: `带载计算失败：${err.message}` });
   }
+  if (res.writableEnded || res.destroyed) return;
 
   const base = {
     target: serializeFrac(target),

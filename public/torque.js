@@ -22,6 +22,23 @@ const EXAMPLE_GEARS = [
   { id: 'G7', teeth: 60, ratedTorque: 1500 },
 ];
 
+/**
+ * 最近一次提交对应的 AbortController：
+ * 重新提交或离开页面时中止上一请求，只有最新提交的结果 / 错误允许渲染，
+ * 避免旧计算晚于新计算返回时覆盖新参数的结果。
+ * @type {AbortController|null}
+ */
+let activeController = null;
+
+/** 离开 / 卸载页面时取消仍在进行的请求（服务端同步释放队列名额 / 终止计算） */
+function cancelActive() {
+  if (activeController) {
+    activeController.abort();
+    activeController = null;
+  }
+}
+window.addEventListener('pagehide', cancelActive);
+
 function el(tag, className, html) {
   const e = document.createElement(tag);
   if (className) e.className = className;
@@ -141,6 +158,9 @@ function renderSolution(r, index) {
 
 form.addEventListener('submit', async (ev) => {
   ev.preventDefault();
+  // 新提交顶替上一请求：中止旧请求（服务端立即释放队列名额 / 终止旧计算），
+  // 旧请求晚到的响应或错误不再可能渲染到页面
+  cancelActive();
   formError.hidden = true;
   resultPanel.hidden = true;
 
@@ -162,14 +182,19 @@ form.addEventListener('submit', async (ev) => {
     return;
   }
 
+  const controller = new AbortController();
+  activeController = controller;
+
   try {
     const resp = await fetch('/api/torque', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
+      signal: controller.signal,
     });
     const data = await resp.json();
     if (!resp.ok) throw new Error(data.error || '带载选配失败');
+    if (controller.signal.aborted) return; // 提交期间已被更新的提交顶替
 
     resultPanel.hidden = false;
     resultList.innerHTML = '';
@@ -198,6 +223,8 @@ form.addEventListener('submit', async (ev) => {
     }
     data.results.forEach((r, i) => resultList.appendChild(renderSolution(r, i)));
   } catch (e) {
+    // 被新提交 / 离开页面取消：保持新提交（或空白）的界面，不展示陈旧错误
+    if (controller.signal.aborted || activeController !== controller) return;
     resultPanel.hidden = false;
     resultList.innerHTML = '';
     truncatedNote.hidden = true;
