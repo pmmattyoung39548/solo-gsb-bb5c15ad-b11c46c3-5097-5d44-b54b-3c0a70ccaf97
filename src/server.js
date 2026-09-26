@@ -567,13 +567,23 @@ app.post('/api/torque', async (req, res) => {
     });
   }
 
+  // HTTP 连接关闭（页面重新提交中止上一请求、离开页面等）时立即取消对应任务：
+  // 排队中则立即出队释放名额，计算中则终止 worker，避免旧结果晚到覆盖新提交
+  res.on('close', () => {
+    if (!res.writableEnded) submitted.cancel();
+  });
+
   let plan;
   try {
     plan = await submitted.result;
   } catch (err) {
+    // 连接已关闭触发的取消：响应无从写出，直接结束（不视为 500）
+    if (err.canceled || res.writableEnded) return;
     // 计算线程异常（含线程崩溃重建）只让当前请求失败，队列中其余请求不受影响
     return res.status(500).json({ error: `带载计算失败：${err.message}` });
   }
+  // 取消与完成并发到达时（如结果 resolve 与连接关闭同时发生）不再向已关闭连接写响应
+  if (res.writableEnded) return;
 
   const base = {
     target: serializeFrac(target),

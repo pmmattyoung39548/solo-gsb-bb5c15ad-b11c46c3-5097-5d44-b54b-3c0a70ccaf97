@@ -139,8 +139,23 @@ function renderSolution(r, index) {
   return card;
 }
 
+/* 当前在途请求的中断器：重新提交或离开页面时中止上一请求，
+   页面只展示最近一次提交的结果与错误（旧响应晚到也不会覆盖新结果） */
+let activeController = null;
+
+function abortActiveRequest() {
+  if (activeController) {
+    activeController.abort();
+    activeController = null;
+  }
+}
+
+window.addEventListener('pagehide', abortActiveRequest);
+
 form.addEventListener('submit', async (ev) => {
   ev.preventDefault();
+  // 新提交先取消上一在途请求，旧请求的迟到结果 / 错误一律不再上屏
+  abortActiveRequest();
   formError.hidden = true;
   resultPanel.hidden = true;
 
@@ -162,14 +177,21 @@ form.addEventListener('submit', async (ev) => {
     return;
   }
 
+  const controller = new AbortController();
+  activeController = controller;
+
   try {
     const resp = await fetch('/api/torque', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
+      signal: controller.signal,
     });
     const data = await resp.json();
     if (!resp.ok) throw new Error(data.error || '带载选配失败');
+
+    // 被更新的提交取代的旧响应不再渲染
+    if (controller.signal.aborted) return;
 
     resultPanel.hidden = false;
     resultList.innerHTML = '';
@@ -198,6 +220,9 @@ form.addEventListener('submit', async (ev) => {
     }
     data.results.forEach((r, i) => resultList.appendChild(renderSolution(r, i)));
   } catch (e) {
+    // 被新提交 / 离开页面中止的旧请求：静默丢弃，不覆盖最近一次提交的结果与错误
+    if (e.name === 'AbortError' || controller.signal.aborted) return;
+    if (controller !== activeController) return;
     resultPanel.hidden = false;
     resultList.innerHTML = '';
     truncatedNote.hidden = true;
